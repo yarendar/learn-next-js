@@ -48,6 +48,7 @@ const Home = async ({ searchParams }: SearchParams) => {
       views: 100,
     },
   ];
+
   const filteredQuestions = questions.filter(
     (question) =>
       question.title.toLowerCase().includes(query?.toLowerCase()) || !query,
