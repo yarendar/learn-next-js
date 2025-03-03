@@ -6,8 +6,8 @@ import { getDevIconClassName } from "@/lib/utils";
 
 interface Props {
   _id: string;
-  title: string;
-  questions: number;
+  name: string;
+  questions?: number;
   showCount?: boolean;
   compact?: boolean;
 }

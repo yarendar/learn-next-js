@@ -3,6 +3,7 @@ import ROUTES from "@/constants/routes";
 import Link from "next/link";
 import LocalSearch from "@/components/search/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
+import QuestionCard from "@/components/cards/QuestionCard";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -22,8 +23,10 @@ const Home = async ({ searchParams }: SearchParams) => {
       author: {
         _id: "4",
         name: "John Doe",
+        image:
+          "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg",
       },
-      createdAt: new Date(),
+      createdAt: new Date("2025-01-01"),
       upvotes: 10,
       answers: 5,
       views: 100,
@@ -36,15 +39,18 @@ const Home = async ({ searchParams }: SearchParams) => {
       author: {
         _id: "4",
         name: "John Doe",
+        image:
+          "https://icon-library.com/images/avatar-icon-images/avatar-icon-images-4.jpg",
       },
-      createdAt: new Date(),
+      createdAt: new Date("2022-03-12"),
       upvotes: 10,
       answers: 5,
       views: 100,
     },
   ];
-  const filteredQuestions = questions.filter((question) =>
-    question.title.toLowerCase().includes(query?.toLowerCase()),
+  const filteredQuestions = questions.filter(
+    (question) =>
+      question.title.toLowerCase().includes(query?.toLowerCase()) || !query,
   );
 
   return (
@@ -70,7 +76,7 @@ const Home = async ({ searchParams }: SearchParams) => {
       <HomeFilter />
       <div className="mt-10 flex w-full flex-col gap-6">
         {filteredQuestions.map((question) => (
-          <h1 key={question._id}>{question.title}</h1>
+          <QuestionCard key={question._id} question={question} />
         ))}
       </div>
     </>
