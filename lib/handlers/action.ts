@@ -29,21 +29,21 @@ async function action<T>({
         return new Error("Schema validation error");
       }
     }
-
-    let session: Session | null = null;
-
-    if (authorize) {
-      session = await auth();
-
-      if (!session) {
-        return new UnauthorizedError();
-      }
-    }
-
-    await dbConnect();
-
-    return { params, session };
   }
+
+  let session: Session | null = null;
+
+  if (authorize) {
+    session = await auth();
+
+    if (!session) {
+      return new UnauthorizedError();
+    }
+  }
+
+  await dbConnect();
+
+  return { params, session };
 }
 
 export default action;
