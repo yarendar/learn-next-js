@@ -6,6 +6,12 @@ import Question from "@/database/question.model";
 import TagQuestion from "@/database/tag-question.model";
 import Tag, { ITagDoc } from "@/database/tag.model";
 
+import {
+  ErrorResponse,
+  Question as QuestionType,
+  Tag as TagType,
+} from "@/types/global";
+
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import {
@@ -13,11 +19,11 @@ import {
   EditQuestionSchema,
   GetQuestionSchema,
 } from "../validations";
-import { ActionResponse, ErrorResponse } from "@/types/global";
+import { ActionResponse } from "@/types/global";
 
 export async function createQuestion(
   params: CreateQuestionParams,
-): Promise<ActionResponse<typeof Question>> {
+): Promise<ActionResponse<QuestionType>> {
   const validationResult = await action({
     params,
     schema: AskQuestionSchema,
@@ -82,7 +88,7 @@ export async function createQuestion(
 
 export async function editQuestion(
   params: EditQuestionParams,
-): Promise<ActionResponse<typeof Question>> {
+): Promise<ActionResponse<QuestionType>> {
   const validationResult = await action({
     params,
     schema: EditQuestionSchema,
@@ -145,7 +151,7 @@ export async function editQuestion(
     }
 
     if (tagsToRemove.length > 0) {
-      const tagIdsToRemove = tagsToRemove.map((tag: ITagDoc) => tag._id);
+      const tagIdsToRemove = tagsToRemove.map((tag: TagType) => tag._id);
 
       await Tag.updateMany(
         { _id: { $in: tagIdsToRemove } },
@@ -181,7 +187,7 @@ export async function editQuestion(
 
 export async function getQuestion(
   params: GetQuestionParams,
-): Promise<ActionResponse<typeof Question>> {
+): Promise<ActionResponse<QuestionType>> {
   const validationResult = await action({
     params,
     schema: GetQuestionSchema,
