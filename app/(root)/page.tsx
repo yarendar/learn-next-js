@@ -4,59 +4,23 @@ import Link from "next/link";
 import LocalSearch from "@/components/search/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
 import QuestionCard from "@/components/cards/QuestionCard";
-import { auth } from "@/auth";
+import { getQuestions } from "@/lib/actions/queston.action";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
-  const session = await auth();
-  console.log("Session", session);
+  const { page, pageSize, query, filter } = await searchParams;
 
-  const { query } = await searchParams;
-  const questions = [
-    {
-      _id: "1",
-      title: "How to learn React?",
-      description: "I want to learn React. Can anyone help me?",
-      tags: [
-        { _id: "1", name: "React" },
-        { _id: "2", name: "JavaScript" },
-      ],
-      author: {
-        _id: "4",
-        name: "John Doe",
-        image:
-          "https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg",
-      },
-      createdAt: new Date("2025-01-01"),
-      upvotes: 10,
-      answers: 5,
-      views: 100,
-    },
-    {
-      _id: "2",
-      title: "How to learn javascript?",
-      description: "I want to learn javascript. Can anyone help me?",
-      tags: [{ _id: "2", name: "JavaScript" }],
-      author: {
-        _id: "4",
-        name: "John Doe",
-        image:
-          "https://icon-library.com/images/avatar-icon-images/avatar-icon-images-4.jpg",
-      },
-      createdAt: new Date("2022-03-12"),
-      upvotes: 10,
-      answers: 5,
-      views: 100,
-    },
-  ];
+  const { success, data, error } = await getQuestions({
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    query: query || "",
+    filter: filter || "",
+  });
 
-  const filteredQuestions = questions.filter(
-    (question) =>
-      question.title.toLowerCase().includes(query?.toLowerCase()) || !query,
-  );
+  const { questions } = data || [];
 
   return (
     <>
@@ -79,11 +43,25 @@ const Home = async ({ searchParams }: SearchParams) => {
         />
       </section>
       <HomeFilter />
-      <div className="mt-10 flex w-full flex-col gap-6">
-        {filteredQuestions.map((question) => (
-          <QuestionCard key={question._id} question={question} />
-        ))}
-      </div>
+      {success ? (
+        <div className="mt-10 flex w-full flex-col gap-6">
+          {questions && questions.length > 0 ? (
+            questions.map((question) => (
+              <QuestionCard key={question._id} question={question} />
+            ))
+          ) : (
+            <div className="mt-10 flex w-full items-center justify-center">
+              <p className="text-dark400_light700">No questions found</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="mt-10 flex w-full items-center justify-center">
+          <p className="text-dark400_light700">
+            {error?.message || "Failed to fetch questions"}
+          </p>
+        </div>
+      )}
     </>
   );
 };
