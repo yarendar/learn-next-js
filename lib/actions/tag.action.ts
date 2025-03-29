@@ -74,7 +74,7 @@ export async function getTags(
   }
 }
 
-export async function GetTagQuestions(params: GetTagQuestionParams): Promise<
+export async function getTagQuestions(params: GetTagQuestionParams): Promise<
   ActionResponse<{
     tag: typeof Tag;
     questions: QuestionType[];
