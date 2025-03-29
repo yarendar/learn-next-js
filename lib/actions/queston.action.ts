@@ -22,9 +22,11 @@ import {
   PaginateSearchParamsSchema,
 } from "../validations";
 import { ActionResponse } from "@/types/global";
-import { GetQuestionParams, IncrementViewsParams } from "@/types/action";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
+import {
+  CreateQuestionParams,
+  GetQuestionParams,
+  IncrementViewsParams,
+} from "@/types/action";
 
 export async function createQuestion(
   params: CreateQuestionParams,
@@ -320,8 +322,6 @@ export async function incrementViews(
     question.views += 1;
 
     await question.save();
-
-    revalidatePath(ROUTES.QUESTION(questionId));
 
     return { success: true, data: { views: question.views } };
   } catch (error) {

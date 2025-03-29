@@ -7,16 +7,22 @@ import Metric from "@/components/Metric";
 import { formatNumber, getTimestamp } from "@/lib/utils";
 import TagCard from "@/components/cards/TagCard";
 import Preview from "@/components/editor/Preview";
-import { getQuestion } from "@/lib/actions/queston.action";
+import { getQuestion, incrementViews } from "@/lib/actions/queston.action";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
+
   const { success, data: question } = await getQuestion({ questionId: id });
 
   if (!success || !question) {
     return redirect("/404");
   }
+
+  after(async () => {
+    await incrementViews({ questionId: id });
+  });
 
   const { author, createdAt, answers, views, tags, content } = question;
   return (
