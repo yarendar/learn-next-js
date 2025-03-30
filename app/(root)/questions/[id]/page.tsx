@@ -11,6 +11,7 @@ import { getQuestion, incrementViews } from "@/lib/actions/queston.action";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
 import AnswerForm from "@/components/forms/AnswerForm";
+import { getAnswers } from "@/lib/actions/answer.action";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -20,6 +21,15 @@ const QuestionDetails = async ({ params }: RouteParams) => {
   if (!success || !question) {
     return redirect("/404");
   }
+
+  const { data: answersResult } = await getAnswers({
+    questionId: id,
+    page: 1,
+    pageSize: 10,
+    filter: "latest",
+  });
+
+  console.log(answersResult);
 
   after(async () => {
     await incrementViews({ questionId: id });
