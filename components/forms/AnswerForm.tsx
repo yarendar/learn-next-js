@@ -14,19 +14,22 @@ import {
 } from "@/components/ui/form";
 
 import { AnswerSchema } from "@/lib/validations";
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import dynamic from "next/dynamic";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
+import { createAnswer } from "@/lib/actions/answer.action";
+import { toast } from "sonner";
 
 const Editor = dynamic(() => import("@/components/editor"), {
   ssr: false,
 });
 
-const AnswerForm = () => {
-  const [isSubmitting] = useState(false);
-  const [isAiSubmitting] = useState(false);
+const AnswerForm = ({ questionId }: { questionId: string }) => {
+  const [isAnswering, startAnsweringTransition] = useTransition();
+
+  const [isAISubmitting] = useState(false);
 
   const editorRef = useRef<MDXEditorMethods>(null);
 
@@ -36,7 +39,24 @@ const AnswerForm = () => {
   });
 
   const handleSubmit = async (values: z.infer<typeof AnswerSchema>) => {
-    console.log(values);
+    startAnsweringTransition(async () => {
+      const result = await createAnswer({
+        questionId,
+        content: values.content,
+      });
+
+      if (result.success) {
+        form.reset();
+
+        toast.success("Success", {
+          description: "Your answer has been posted successfully",
+        });
+      } else {
+        toast.error("Error", {
+          description: result.error?.message,
+        });
+      }
+    });
   };
 
   return (
@@ -47,9 +67,9 @@ const AnswerForm = () => {
         </h4>
         <Button
           className="btn light-border-2 gap-1.5 rounded-md border px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
-          disabled={isAiSubmitting}
+          disabled={isAISubmitting}
         >
-          {isAiSubmitting ? (
+          {isAISubmitting ? (
             <>
               <ReloadIcon className="mr-2 size-4 animate-spin" />
               Generating...
@@ -57,13 +77,13 @@ const AnswerForm = () => {
           ) : (
             <>
               <Image
-                src={"/icons/stars.svg"}
+                src="/icons/stars.svg"
                 alt="Generate AI Answer"
                 width={12}
                 height={12}
                 className="object-contain"
-              />{" "}
-              Generate AI answer
+              />
+              Generate AI Answer
             </>
           )}
         </Button>
@@ -74,8 +94,8 @@ const AnswerForm = () => {
           className="mt-6 flex w-full flex-col gap-10"
         >
           <FormField
-            name="content"
             control={form.control}
+            name="content"
             render={({ field }) => (
               <FormItem className="flex w-full flex-col gap-3">
                 <FormControl className="mt-3.5">
@@ -91,14 +111,14 @@ const AnswerForm = () => {
           />
 
           <div className="flex justify-end">
-            <Button type={"submit"} className="primary-gradient w-fit">
-              {isSubmitting ? (
+            <Button type="submit" className="primary-gradient w-fit">
+              {isAnswering ? (
                 <>
                   <ReloadIcon className="mr-2 size-4 animate-spin" />
                   Posting...
                 </>
               ) : (
-                "Post answer"
+                "Post Answer"
               )}
             </Button>
           </div>
