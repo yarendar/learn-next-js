@@ -31,11 +31,16 @@ export const EMPTY_QUESTION = {
 
 export const EMPTY_TAGS = {
   title: "No Tags Found",
-  message: "The tag cloud is empty. Add some keywords to make it rain.",
+  message: "The tag cloud is empty. Make it rain with your brilliant answer.",
   button: {
-    text: "Create Tag",
-    href: ROUTES.TAGS,
+    text: "Answer",
+    href: ROUTES.HOME,
   },
+};
+
+export const EMPTY_ANSWERS = {
+  title: "No Answers Found",
+  message: "The answer board is empty. Add some keywords to make it rain.",
 };
 
 export const EMPTY_COLLECTIONS = {

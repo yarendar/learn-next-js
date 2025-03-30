@@ -1,0 +1,34 @@
+import React from "react";
+import { ActionResponse, Answer } from "@/types/global";
+import DataRenderer from "@/components/DataRenderer";
+import { EMPTY_ANSWERS } from "@/constants/states";
+import AnswerCard from "@/components/cards/AnswerCard";
+
+interface Props extends ActionResponse<Answer[]> {
+  totalAnswers: number;
+}
+
+const AllAnswers = ({ data, success, totalAnswers }: Props) => {
+  return (
+    <div className="mt-11">
+      <div className="flex items-center justify-between">
+        <h3 className="primary-text-gradient">
+          {totalAnswers} {totalAnswers === 1 ? "Answer" : "Answers"}
+        </h3>
+
+        <p>Filters</p>
+      </div>
+
+      <DataRenderer
+        success={success}
+        data={data}
+        empty={EMPTY_ANSWERS}
+        render={(answers: Answer[]) =>
+          answers.map((answer) => <AnswerCard key={answer._id} {...answer} />)
+        }
+      />
+    </div>
+  );
+};
+
+export default AllAnswers;
