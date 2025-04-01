@@ -1,9 +1,3 @@
-import {
-  ActionResponse,
-  ErrorResponse,
-  PaginatedSearchParams,
-  Question as QuestionType,
-} from "@/types/global";
 import action from "@/lib/handlers/action";
 import {
   GetTagQuestionsSchema,
@@ -12,7 +6,6 @@ import {
 import handleError from "@/lib/handlers/error";
 import { FilterQuery } from "mongoose";
 import Tag from "@/database/tag.model";
-import { GetTagQuestionParams } from "@/types/action";
 import Question from "@/database/question.model";
 
 export async function getTags(
@@ -77,7 +70,7 @@ export async function getTags(
 export async function getTagQuestions(params: GetTagQuestionParams): Promise<
   ActionResponse<{
     tag: typeof Tag;
-    questions: QuestionType[];
+    questions: Question[];
     isNext: boolean;
   }>
 > {
@@ -101,7 +94,7 @@ export async function getTagQuestions(params: GetTagQuestionParams): Promise<
       throw new Error("Tag not found");
     }
 
-    const filterQuery: FilterQuery<typeof Question> = {
+    const filterQuery: FilterQuery<Question> = {
       tags: { $in: [tagId] },
     };
 

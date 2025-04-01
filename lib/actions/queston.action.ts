@@ -6,12 +6,6 @@ import Question, { IQuestionDoc } from "@/database/question.model";
 import TagQuestion from "@/database/tag-question.model";
 import Tag, { ITagDoc } from "@/database/tag.model";
 
-import {
-  ErrorResponse,
-  PaginatedSearchParams,
-  Tag as TagType,
-} from "@/types/global";
-
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import {
@@ -21,12 +15,6 @@ import {
   IncrementViewsSchema,
   PaginateSearchParamsSchema,
 } from "../validations";
-import { ActionResponse } from "@/types/global";
-import {
-  CreateQuestionParams,
-  GetQuestionParams,
-  IncrementViewsParams,
-} from "@/types/action";
 
 export async function createQuestion(
   params: CreateQuestionParams,
@@ -162,7 +150,7 @@ export async function editQuestion(
     }
 
     if (tagsToRemove.length > 0) {
-      const tagIdsToRemove = tagsToRemove.map((tag: TagType) => tag._id);
+      const tagIdsToRemove = tagsToRemove.map((tag: Tag) => tag._id);
 
       await Tag.updateMany(
         { _id: { $in: tagIdsToRemove } },

@@ -1,7 +1,5 @@
 "use server";
 
-import { CreateAnswerParams, GetAnswersParams } from "@/types/action";
-import { ActionResponse, ErrorResponse } from "@/types/global";
 import { IAnswerDoc } from "@/database/answer.model";
 import action from "@/lib/handlers/action";
 import { AnswerServerSchema, GetAnswerSchema } from "@/lib/validations";
@@ -10,7 +8,6 @@ import mongoose from "mongoose";
 import { Answer, Question } from "@/database";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constants/routes";
-import { Answer as AnswerType } from "@/types/global";
 
 export async function createAnswer(
   params: CreateAnswerParams,
@@ -72,7 +69,7 @@ export async function createAnswer(
 
 export async function getAnswers(params: GetAnswersParams): Promise<
   ActionResponse<{
-    answers: AnswerType[];
+    answers: Answer[];
     isNext: boolean;
     totalAnswers: number;
   }>

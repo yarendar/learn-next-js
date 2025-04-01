@@ -5,8 +5,6 @@ import Image from "next/image";
 import { formatNumber } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { ActionResponse } from "@/types/global";
-import { HasVotedResponse } from "@/types/action";
 import { createVote } from "@/lib/actions/vote.action";
 
 interface Params {

@@ -1,7 +1,5 @@
 "use server";
 
-import { ActionResponse, ErrorResponse } from "@/types/global";
-import { CollectionBaseParams } from "@/types/action";
 import action from "@/lib/handlers/action";
 import { CollectionBaseSchema } from "@/lib/validations";
 import handleError from "@/lib/handlers/error";

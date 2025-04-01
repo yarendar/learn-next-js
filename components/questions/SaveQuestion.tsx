@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { toggleSaveQuestion } from "@/lib/actions/collection.action";
-import { ActionResponse } from "@/types/global";
 
 const SaveQuestion = ({
   questionId,

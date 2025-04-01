@@ -1,12 +1,5 @@
 "use server";
 
-import {
-  CreateVoteParams,
-  HasVotedParams,
-  HasVotedResponse,
-  UpdateVoteCountParams,
-} from "@/types/action";
-import { ActionResponse, ErrorResponse } from "@/types/global";
 import action from "@/lib/handlers/action";
 import {
   CreateVoteSchema,

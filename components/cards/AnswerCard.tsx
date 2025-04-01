@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import { Answer } from "@/types/global";
 import UserAvatar from "@/components/UserAvatar";
 import Link from "next/link";
 import ROUTES from "@/constants/routes";

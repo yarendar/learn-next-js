@@ -1,5 +1,4 @@
 import React from "react";
-import { ActionResponse, Answer } from "@/types/global";
 import DataRenderer from "@/components/DataRenderer";
 import { EMPTY_ANSWERS } from "@/constants/states";
 import AnswerCard from "@/components/cards/AnswerCard";
