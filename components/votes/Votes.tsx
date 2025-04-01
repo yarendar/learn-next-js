@@ -1,55 +1,82 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import Image from "next/image";
 import { formatNumber } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { ActionResponse } from "@/types/global";
+import { HasVotedResponse } from "@/types/action";
+import { createVote } from "@/lib/actions/vote.action";
 
 interface Params {
+  targetType: "question" | "answer";
+  targetId: string;
   upvotes: number;
   downvotes: number;
-  hasupVoted: boolean;
-  hasdownVoted: boolean;
+  hasVotedPromise: Promise<ActionResponse<HasVotedResponse>>;
 }
 
-const Votes = ({ upvotes, downvotes, hasupVoted, hasdownVoted }: Params) => {
+const Votes = ({
+  upvotes,
+  downvotes,
+  hasVotedPromise,
+  targetId,
+  targetType,
+}: Params) => {
   const session = useSession();
   const userId = session.data?.user?.id;
 
+  const { success, data } = use(hasVotedPromise);
+
   const [isLoading, setIsLoading] = useState(false);
+
+  const { hasUpvoted, hasDownvoted } = data || {};
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
     if (!userId)
-      return toast("Please login to vote", {
+      return toast.error("Please login to vote", {
         description: "Only logged-in users can vote.",
       });
 
     setIsLoading(true);
 
     try {
+      const result = await createVote({
+        targetId,
+        targetType,
+        voteType,
+      });
+
+      if (!result.success) {
+        return toast.error("Failed to vote", {
+          description: result.error?.message,
+        });
+      }
+
       const successMessage =
         voteType === "upvote"
-          ? `Upvote ${!hasupVoted ? "added" : "removed"} successfully`
-          : `Downvote ${!hasdownVoted ? "added" : "removed"} successfully`;
+          ? `Upvote ${!hasUpvoted ? "added" : "removed"} successfully`
+          : `Downvote ${!hasDownvoted ? "added" : "removed"} successfully`;
 
-      toast(successMessage, {
+      toast.success(successMessage, {
         description: "Your vote has been recorded.",
       });
     } catch {
-      toast("Failed to vote", {
+      toast.error("Failed to vote", {
         description: "An error occurred while voting. Please try again later.",
       });
     } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="flex-center gap-2.5">
       <div className="flex-center gap-1.5">
         <Image
-          src={hasupVoted ? "/icons/upvoted.svg" : "/icons/upvote.svg"}
+          src={
+            success && hasUpvoted ? "/icons/upvoted.svg" : "/icons/upvote.svg"
+          }
           width={18}
           height={18}
           alt="upvote"
@@ -67,7 +94,11 @@ const Votes = ({ upvotes, downvotes, hasupVoted, hasdownVoted }: Params) => {
 
       <div className="flex-center gap-1.5">
         <Image
-          src={hasdownVoted ? "/icons/downvoted.svg" : "/icons/downvote.svg"}
+          src={
+            success && hasDownvoted
+              ? "/icons/downvoted.svg"
+              : "/icons/downvote.svg"
+          }
           width={18}
           height={18}
           alt="downvote"
