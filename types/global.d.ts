@@ -60,6 +60,7 @@ interface Answer {
   content: string;
   upvotes: number;
   downvotes: number;
+  question: string;
   createdAt: Date;
 }
 
