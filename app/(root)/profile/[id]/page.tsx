@@ -7,6 +7,7 @@ import ProfileLink from "@/components/user/ProfileLink";
 import dayjs from "dayjs";
 import Link from "next/link";
 import Stats from "@/components/user/Stats";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Profile = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -96,6 +97,36 @@ const Profile = async ({ params }: RouteParams) => {
           BRONZE: 0,
         }}
       />
+
+      <section className="mt-10 flex gap-10">
+        <Tabs defaultValue="top-posts" className="flex-[2]">
+          <TabsList className="background-light800_dark400 min-h-[42px] p-1">
+            <TabsTrigger value="top-posts" className="tab">
+              Top Posts
+            </TabsTrigger>
+            <TabsTrigger value="answers" className="tab">
+              Answers
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent
+            value="top-posts"
+            className="mt-5 flex w-full flex-col gap-6"
+          >
+            LIst of questions
+          </TabsContent>
+          <TabsContent value="answers" className="flex w-full flex-col gap-6">
+            answers
+          </TabsContent>
+        </Tabs>
+
+        <div className="flex w-full min-w-[250px] flex-1 flex-col max-lg:hidden">
+          <h3 className="h3-bold text-dark200_light900">Top tech</h3>
+
+          <div className="mt-7 flex flex-col gap-4">
+            <p>List of tags</p>
+          </div>
+        </div>
+      </section>
     </>
   );
 };
