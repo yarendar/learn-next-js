@@ -69,7 +69,7 @@ export async function getUsers(
 export async function getUser(params: GetUserParams): Promise<
   ActionResponse<{
     user: User;
-    totalQuestion: number;
+    totalQuestions: number;
     totalAnswers: number;
   }>
 > {
@@ -99,7 +99,7 @@ export async function getUser(params: GetUserParams): Promise<
       data: {
         user: JSON.parse(JSON.stringify(user)),
         totalAnswers,
-        totalQuestion,
+        totalQuestions: totalQuestion,
       },
     };
   } catch (error) {
