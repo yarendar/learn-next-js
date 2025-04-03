@@ -80,3 +80,7 @@ interface GetUserQuestionsParams
 interface GeUserAnswersParams extends aginatedSearchParams {
   userId: string;
 }
+
+interface GetUserTagsParams {
+  userId: string;
+}
